@@ -1,0 +1,45 @@
+<ui:composition template="/WEB-INF/templates/Layout.xhtml"
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+	xmlns:f="http://xmlns.jcp.org/jsf/core"
+	xmlns:h="http://xmlns.jcp.org/jsf/html"
+	xmlns:p="http://primefaces.org/ui">
+
+	<ui:define name="titulo">Cadastro material</ui:define>
+
+	<ui:define name="content">
+		<f:metadata>
+			<f:viewAction action="#{cadastroMaterialBean.inicializar()}" />
+			<f:viewParam name="material" value="#{cadastroMaterialBean.material}" />
+		</f:metadata>
+
+		<h1 class="aw-page-title">#{cadastroMaterialBean.editando ?
+			'Edição de material' : 'Novo material'}</h1>
+		<br />
+		<h:form id="frm">
+			<p:focus context="frm" />
+			<p:toolbar>
+				<p:toolbarGroup>
+					<p:commandButton value="Salvar"
+						action="#{cadastroMaterialBean.salvar}" update="@form" />
+				</p:toolbarGroup>
+				<p:toolbarGroup align="right">
+					<p:button value="Novo material"
+						outcome="/materiais/CadastroMaterial" />
+					<p:button value="Pesquisa" outcome="/materiais/PesquisaMateriais" />
+				</p:toolbarGroup>
+			</p:toolbar>
+			<p:messages closable="true" id="msg" />			
+			<div class="ui-fluid">
+				<p:panelGrid columns="2" layout="grid"
+					columnClasses="ui-grid-col-1, ui-grid-col-8"
+					styleClass="panelgrid-noborder" style="margin-top: 10px;">
+					<p:outputLabel value="Descrição" for="descricao" />
+					<p:inputText id="descricao"
+						value="#{cadastroMaterialBean.material.descricao}" />
+				</p:panelGrid>
+			</div>
+		</h:form>
+	</ui:define>
+
+</ui:composition>

@@ -1,0 +1,81 @@
+<ui:composition template="/WEB-INF/templates/Layout.xhtml"
+	ounfxmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+	xmlns:f="http://xmlns.jcp.org/jsf/core"
+	xmlns:h="http://xmlns.jcp.org/jsf/html"
+	xmlns:p="http://primefaces.org/ui">
+	<head>
+<meta charset="UTF-8" />
+	</head>
+	<ui:define name="titulo">Mensalidades</ui:define>
+	<ui:define name="content">
+		<f:metadata>
+			<f:viewAction action="#{geraMensalidadesBean.inicializar()}" />
+			<f:viewParam name="contrato" value="#{geraMensalidadesBean.contrato}" />
+		</f:metadata>
+		<h1 class="aw-page-title">Gerar Mensalidades</h1>
+		<h:form id="frm">
+			<p:messages id="msg" />
+			<div class="ui-fluid">
+				<p:toolbar>
+					<p:toolbarGroup>
+						<p:commandButton value="Gerar"
+							action="#{geraMensalidadesBean.gerarParcelas()}" update="@form" />
+					</p:toolbarGroup>
+				</p:toolbar>
+				<p:panel header="Dados Contrato" style="margin-top: 10px;">
+					<p:panelGrid columns="2" layout="grid"
+						columnClasses="ui-grid-col-2, ui-grid-col-10"
+						styleClass="panelgrid-noborder">
+						<p:outputLabel value="Contrato" />
+						<p:outputLabel
+							value="#{geraMensalidadesBean.contrato.id}" />						
+						<p:outputLabel value="Responsável" />
+						<p:outputLabel
+							value="#{geraMensalidadesBean.contrato.aluno.responsavel.nome}" />
+						<p:outputLabel value="Aluno" />
+						<p:outputLabel value="#{geraMensalidadesBean.contrato.aluno.nome}" />
+						<p:outputLabel value="Curso" />
+						<p:outputLabel
+							value="#{geraMensalidadesBean.contrato.curso.descricao}" />
+						<p:outputLabel value="Matrícula" />
+						<p:outputLabel value="#{geraMensalidadesBean.contrato.matricula}">
+							<f:convertNumber type="currency" />
+						</p:outputLabel>
+						<p:outputLabel value="Mensalidade" />
+						<p:outputLabel value="#{geraMensalidadesBean.contrato.valor}">
+							<f:convertNumber type="currency" />
+						</p:outputLabel>
+						<p:outputLabel value="Última parcela gerada" />
+						<p:outputLabel value="#{geraMensalidadesBean.ultimaParcelaGerada}" />
+						<p:outputLabel value="Data última parcela" />
+						<p:outputLabel value="#{geraMensalidadesBean.ultimaDataGerada}">
+							<f:convertDateTime pattern="dd/MM/yyyy"/>
+						</p:outputLabel>						
+					</p:panelGrid>
+				</p:panel>
+				<p:panelGrid columns="2" layout="grid"
+					columnClasses="ui-grid-col-1, ui-grid-col-1"
+					styleClass="panelgrid-noborder" style="margin-top: 10px;">
+					<p:outputLabel value="Gerar de" />
+					<p:inputNumber value="#{geraMensalidadesBean.parcelaInicial}"
+						decimalSeparator="" thousandSeparator="" decimalPlaces="0" />
+					<p:outputLabel value="até" />
+					<p:inputNumber value="#{geraMensalidadesBean.parcelaFinal}"
+						decimalSeparator="" thousandSeparator="" decimalPlaces="0" />
+				</p:panelGrid>
+				<p:panelGrid columns="2" layout="grid"
+					columnClasses="ui-grid-col-1, ui-grid-col-2"
+					styleClass="panelgrid-noborder">
+					<p:outputLabel value="Data início" />
+					<p:calendar value="#{geraMensalidadesBean.dataInicial}"
+						pattern="dd/MM/yyyy" mask="true" />
+				</p:panelGrid>
+
+			</div>
+
+		</h:form>
+
+	</ui:define>
+
+</ui:composition>

@@ -1,0 +1,147 @@
+<ui:composition template="/WEB-INF/templates/Layout.xhtml"
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+	xmlns:f="http://xmlns.jcp.org/jsf/core"
+	xmlns:h="http://xmlns.jcp.org/jsf/html"
+	xmlns:p="http://primefaces.org/ui">
+
+	<ui:define name="titulo">Cadastro responsavel</ui:define>
+
+	<ui:define name="content">
+		<f:metadata>
+			<f:viewAction action="#{cadastroResponsavelBean.inicializar()}" />
+			<f:viewParam name="responsavel"
+				value="#{cadastroResponsavelBean.responsavel}" />
+		</f:metadata>
+
+		<h1 class="aw-page-title">#{cadastroResponsavelBean.editando ?
+			'Edição de responsável' : 'Novo responsável'}</h1>
+		<br />
+		<h:form id="frm">
+			<p:focus context="frm" />
+			<p:toolbar>
+				<p:toolbarGroup>
+					<p:commandButton value="Salvar"
+						action="#{cadastroResponsavelBean.salvar}" update="@form"
+						disabled="#{!cadastroResponsavelBean.permissaoSalvar}" />
+				</p:toolbarGroup>
+				<p:toolbarGroup align="right">
+					<p:button value="Nova responsavel"
+						outcome="/responsaveis/CadastroResponsavel"
+						disabled="#{!cadastroResponsavelBean.permissaoNovo}" />
+					<p:button value="Pesquisa"
+						outcome="/responsaveis/PesquisaResponsaveis" />
+				</p:toolbarGroup>
+			</p:toolbar>
+
+			<p:messages closable="true" id="msg" />
+			<div class="ui-fluid">
+				<p:panelGrid columns="2" layout="grid"
+					columnClasses="ui-grid-col-1, ui-grid-col-10"
+					styleClass="panelgrid-noborder" style="margin-top: 10px;">
+					<p:outputLabel value="Nome" for="nome" />
+					<p:inputText id="nome"
+						value="#{cadastroResponsavelBean.responsavel.nome}" />
+				</p:panelGrid>
+				<p:panelGrid columns="6" layout="grid"
+					columnClasses="ui-grid-col-1, ui-grid-col-3, ui-grid-col-1, ui-grid-col-3, ui-grid-col-1, ui-grid-col-2"
+					styleClass="panelgrid-noborder">
+					<p:outputLabel value="CPF" for="cpf" />
+					<p:inputMask mask="999.999.999-99" id="cpf"
+						value="#{cadastroResponsavelBean.responsavel.cpf}" />
+					<p:outputLabel value="Identidade" for="identidade" />
+					<p:inputText id="identidade"
+						value="#{cadastroResponsavelBean.responsavel.identidade}" />
+					<p:outputLabel value="Orgão Emissor" for="emissor" />
+					<p:inputText id="emissor"
+						value="#{cadastroResponsavelBean.responsavel.orgaoEmissor}" />
+				</p:panelGrid>
+				<p:panelGrid columns="5" layout="grid"
+					columnClasses="ui-grid-col-1, ui-grid-col-2, ui-grid-col-1, ui-grid-col-1, ui-grid-col-2"
+					styleClass="panelgrid-noborder">
+					<p:outputLabel value="Fixo" />
+					<p:inputMask mask="(99)9999-9999"
+						value="#{cadastroResponsavelBean.responsavel.telefone}" />
+					<p:outputLabel value="" />
+					<p:outputLabel value="Celular" />
+					<p:inputMask mask="(99)99999-9999"
+						value="#{cadastroResponsavelBean.responsavel.celular}" />
+				</p:panelGrid>
+				<p:panelGrid columns="2" layout="grid"
+					columnClasses="ui-grid-col-1, ui-grid-col-5"
+					styleClass="panelgrid-noborder">
+					<p:outputLabel value="E-mail" />
+					<p:inputText value="#{cadastroResponsavelBean.responsavel.email}" />
+				</p:panelGrid>
+				<p:panelGrid columns="4" layout="grid"
+					columnClasses="ui-grid-col-1, ui-grid-col-7, ui-grid-col-1, ui-grid-col-1"
+					styleClass="panelgrid-noborder">
+					<p:outputLabel value="Logradouro" />
+					<p:inputText id="logradouro"
+						value="#{cadastroResponsavelBean.responsavel.endereco.logradouro}" />
+					<p:outputLabel value="número" />
+					<p:inputText
+						value="#{cadastroResponsavelBean.responsavel.endereco.numero}" />
+				</p:panelGrid>
+				<p:panelGrid columns="4" layout="grid"
+					columnClasses="ui-grid-col-1, ui-grid-col-2, ui-grid-col-1, ui-grid-col-4"
+					styleClass="panelgrid-noborder">
+					<p:outputLabel value="CEP" />
+					<p:inputMask mask="99.999-999" id="cep"
+						value="#{cadastroResponsavelBean.responsavel.endereco.cep}" />
+					<p:outputLabel value="Complemento" />
+					<p:inputText id="complemento"
+						value="#{cadastroResponsavelBean.responsavel.endereco.complemento}" />
+				</p:panelGrid>
+				<p:panelGrid columns="4" layout="grid"
+					columnClasses="ui-grid-col-1, ui-grid-col-2 ui-grid-col-2, ui-grid-col-1"
+					styleClass="panelgrid-noborder">
+					<p:outputLabel value="Cidade" />
+					<p:inputText id="cidade"
+						value="#{cadastroResponsavelBean.responsavel.endereco.cidade}" />
+					<p:outputLabel for="estado" value="Estado" />
+					<p:selectOneMenu id="estado"
+						value="#{cadastroResponsavelBean.responsavel.endereco.estado}">
+						<f:selectItems value="#{cadastroResponsavelBean.estados}"
+							var="estado" itemValue="#{estado}"
+							itemLabel="#{estado.descricao}" />
+					</p:selectOneMenu>
+				</p:panelGrid>
+				<p:separator />
+				<p:panelGrid columns="1" layout="grid" columnClasses="ui-grid-col-2"
+					styleClass="panelgrid-noborder">
+					<p:button value="Adicionar Aluno"
+						disabled="#{!cadastroResponsavelBean.editando or !cadastroResponsavelBean.permissaoNovoAluno}"
+						outcome="/alunos/CadastroAluno">
+						<f:param name="responsavel"
+							value="#{cadastroResponsavelBean.responsavel.id}" />
+					</p:button>
+				</p:panelGrid>
+				<p:dataTable value="#{cadastroResponsavelBean.responsavel.alunos}"
+					var="aluno" style="margin-top: 10px" reflow="true"
+					emptyMessage="Nenhum aluno cadastrado" id="table">
+					<p:column headerText="Nome">
+						<p:outputLabel value="#{aluno.nome}" />
+					</p:column>
+					<p:column headerText="E-mail">
+						<p:outputLabel value="#{aluno.email}" />
+					</p:column>
+					<p:column headerText="Contato" width="12%">
+						<p:outputLabel value="#{aluno.contato}" />
+					</p:column>
+
+					<p:column width="12%">
+						<p:button
+							value="#{cadastroResponsavelBean.captionBotaoMatricular(aluno)}"
+							outcome="/pacotes/Pacotes"
+							disabled="#{cadastroResponsavelBean.jaPossuiCotnratoAtivo(aluno) or !cadastroResponsavelBean.permissaoMatricular}">
+							<f:param name="aluno" value="#{aluno.id}" />
+						</p:button>
+					</p:column>
+
+				</p:dataTable>
+			</div>
+		</h:form>
+	</ui:define>
+
+</ui:composition>

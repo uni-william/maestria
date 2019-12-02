@@ -1,0 +1,133 @@
+<ui:composition template="/WEB-INF/templates/Layout.xhtml"
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+	xmlns:f="http://xmlns.jcp.org/jsf/core"
+	xmlns:h="http://xmlns.jcp.org/jsf/html"
+	xmlns:p="http://primefaces.org/ui">
+
+	<ui:define name="titulo">Cadastro aluno</ui:define>
+
+	<ui:define name="content">
+		<f:metadata>
+			<f:viewAction action="#{materiaisAlunoBean.inicializar()}" />
+			<f:viewParam name="aluno" value="#{materiaisAlunoBean.aluno}" />
+		</f:metadata>
+
+		<h1 class="aw-page-title">Materais Aluno</h1>
+		<br />
+		<h:form id="frm" enctype="multipart/form-data">
+			<p:focus context="frm" />
+			<p:toolbar>
+				<p:toolbarGroup>
+					<p:commandButton value="Salvar material"
+						action="#{materiaisAlunoBean.salvarMaterialAluno()}"
+						update="@form" ajax="false" />
+					<p:button value="Novo material" outcome="/alunos/MateriaisAluno">
+						<f:param name="aluno" value="#{materiaisAlunoBean.aluno.id}" />
+					</p:button>						
+				</p:toolbarGroup>
+				<p:toolbarGroup align="right">
+					<p:button value="Voltar" outcome="/alunos/CadastroAluno">
+						<f:param name="aluno" value="#{materiaisAlunoBean.aluno.id}" />
+					</p:button>
+				</p:toolbarGroup>
+			</p:toolbar>
+
+			<p:messages closable="true" id="msg" />
+			<div class="ui-fluid">
+				<p:panelGrid columns="2" layout="grid"
+					columnClasses="ui-grid-col-1, ui-grid-col-10"
+					styleClass="panelgrid-noborder" style="margin-top: 10px;">
+					<p:outputLabel value="Aluno" />
+					<p:outputLabel value="#{materiaisAlunoBean.aluno.nome}" />
+				</p:panelGrid>
+				<p:separator />
+				<p:panelGrid columns="2" layout="grid"
+					columnClasses="ui-grid-col-1, ui-grid-col-4"
+					styleClass="panelgrid-noborder">
+					<p:outputLabel for="material" value="Material" />
+					<p:selectOneMenu id="material"
+						value="#{materiaisAlunoBean.materialAluno.material}">
+						<f:selectItems value="#{materiaisAlunoBean.materiais}"
+							var="material" itemValue="#{material}"
+							itemLabel="#{material.descricao}" />
+					</p:selectOneMenu>
+				</p:panelGrid>
+				<p:panelGrid columns="2" layout="grid"
+					columnClasses="ui-grid-col-1, ui-grid-col-10"
+					styleClass="panelgrid-noborder">
+					<p:outputLabel value="Descrição" for="descricao" />
+					<p:inputText id="descricao"
+						value="#{materiaisAlunoBean.materialAluno.descricao}" />
+				</p:panelGrid>
+				<p:panelGrid columns="2" layout="grid"
+					columnClasses="ui-grid-col-1, ui-grid-col-2"
+					styleClass="panelgrid-noborder">
+					<p:outputLabel value="Data" for="data" />
+					<p:calendar mask="true" pattern="dd/MM/yyyy" id="data"
+						value="#{materiaisAlunoBean.materialAluno.dataCadastro}" />
+				</p:panelGrid>
+				<p:panelGrid columns="4" layout="grid"
+					columnClasses="ui-grid-col-1, ui-grid-col-2, ui-grid-col-1, ui-grid-col-1"
+					styleClass="panelgrid-noborder">
+
+					<p:outputLabel value="Foto" />
+					<p:fileUpload value="#{materiaisAlunoBean.uploadedFile}"
+						label="Escolher" allowTypes="/(\.|\/)(gif|jpe?g|png)$/"
+						mode="simple"
+						rendered="#{materiaisAlunoBean.materialAluno.nomeArquivo == null}" />
+					<p:outputLabel
+						value="#{materiaisAlunoBean.materialAluno.nomeArquivo}"
+						rendered="#{materiaisAlunoBean.materialAluno.nomeArquivo != null}" />
+					<p:commandButton title="Download"
+						action="#{materiaisAlunoBean.download()}" ajax="false"
+						icon="ui-icon-circle-arrow-s"
+						rendered="#{materiaisAlunoBean.materialAluno.nomeArquivo != null}" />
+					<p:commandButton title="Limpar" icon="	ui-icon-cancel"
+						action="#{materiaisAlunoBean.limparFoto()}" process="@this"
+						update="@form"
+						rendered="#{materiaisAlunoBean.materialAluno.nomeArquivo != null}" />
+				</p:panelGrid>
+				<p:dataTable value="#{materiaisAlunoBean.lista}" var="material"
+					style="margin-top: 20px" reflow="true"
+					emptyMessage="Nenhum material cadastrado para o aluno" id="table">
+					<p:column headerText="Tipo" width="15%">
+						<h:outputText value="#{material.material.descricao}" />
+					</p:column>
+					<p:column headerText="Descrição">
+						<h:outputText value="#{material.descricao}" />
+					</p:column>
+					<p:column headerText="Data" width="10%">
+						<h:outputText value="#{material.dataCadastro}">
+							<f:convertDateTime pattern="dd/MM/yyyy" />
+						</h:outputText>
+					</p:column>
+					<p:column width="8%">
+						<p:commandButton icon="ui-icon-pencil" style="width: 30px"
+							update="@form" process="@this">
+							<f:setPropertyActionListener value="#{material}"
+								target="#{materiaisAlunoBean.materialAluno}" />
+						</p:commandButton>
+						<p:commandButton icon="ui-icon-trash" title="Excluir"
+							oncomplete="PF('confirmacao').show(); return false;"
+							process="@this" update=":frm:conf" style="width: 30px">
+							<f:setPropertyActionListener value="#{material}"
+								target="#{materiaisAlunoBean.materialAluno}" />
+						</p:commandButton>
+					</p:column>
+
+				</p:dataTable>
+			</div>
+			<p:confirmDialog header="Excluão de Registro"
+				message="Tem certeza que deseja excluir o material #{materiaisAlunoBean.materialAluno.descricao}?"
+				widgetVar="confirmacao" id="conf">
+				<p:button value="Não"
+					onclick="PF('confirmacao').hide(); return false;" />
+				<p:commandButton value="Sim" update="@form"
+					oncomplete="PF('confirmacao').hide()" process="@this"
+					action="#{materiaisAlunoBean.excluir}" />
+			</p:confirmDialog>
+		</h:form>
+	</ui:define>
+
+</ui:composition>

@@ -1,0 +1,157 @@
+<ui:composition template="/WEB-INF/templates/Layout.xhtml"
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+	xmlns:f="http://xmlns.jcp.org/jsf/core"
+	xmlns:h="http://xmlns.jcp.org/jsf/html"
+	xmlns:p="http://primefaces.org/ui">
+
+	<ui:define name="titulo">Cadastro Colaborador</ui:define>
+
+	<ui:define name="content">
+		<f:metadata>
+			<f:viewParam name="usuario"
+				value="#{cadastroColaboradorBean.usuario}" />
+			<f:viewAction action="#{cadastroColaboradorBean.inicializar}" />
+		</f:metadata>
+		<h1 class="aw-page-title">#{cadastroColaboradorBean.editando ?
+			'Edição de colaborador' : 'Novo colaborador'}</h1>
+		<br />
+		<p:tooltip />
+		<h:form id="frm" enctype="multipart/form-data">
+			<p:focus context="frm" />
+			<p:toolbar>
+				<p:toolbarGroup>
+					<p:commandButton value="Salvar"
+						action="#{cadastroColaboradorBean.salvar}" update="@form" disabled="#{!cadastroColaboradorBean.permissaoSalvar}" />
+				</p:toolbarGroup>
+				<p:toolbarGroup align="right">
+					<p:button value="Novo" outcome="/colaboradores/CadastroColaborador" disabled="#{!cadastroColaboradorBean.permissaoNovo}" />
+					<p:button value="Pesquisar"
+						outcome="/colaboradores/PesquisaColaboradores" />
+				</p:toolbarGroup>
+			</p:toolbar>
+
+			<div class="ui-fluid">
+				<p:messages id="msg1" autoUpdate="false" closable="true" />
+				<p:tabView style="margin-top: 10px" id="tabView">
+					<p:tab title="Dados cadastrais" id="tbPessoa">
+					
+						<p:panelGrid columns="2" layout="grid"
+							columnClasses="ui-grid-col-2, ui-grid-col-3"
+							styleClass="panelgrid-noborder">
+							<p:outputLabel for="empresa" value="Empresa" />
+							<p:selectOneMenu id="empresa"
+								value="#{cadastroColaboradorBean.usuario.colaborador.empresa}">
+								<f:selectItems value="#{cadastroColaboradorBean.empresas}"
+									var="empresa" itemValue="#{empresa}"
+									itemLabel="#{empresa.nomeFantasia}" />
+							</p:selectOneMenu>							
+						</p:panelGrid>					
+
+						<p:panelGrid columns="2" layout="grid"
+							columnClasses="ui-grid-col-2, ui-grid-col-10"
+							styleClass="panelgrid-noborder">
+							<p:outputLabel value="Nome" for="nome" />
+							<p:inputText id="nome"
+								value="#{cadastroColaboradorBean.usuario.colaborador.nome}">
+								<p:ajax event="blur"
+									listener="#{cadastroColaboradorBean.atualizarLogin}"
+									process="@this" update="login" />
+							</p:inputText>
+							<p:outputLabel value="E-mail" for="email" />
+							<p:inputText id="email"
+								value="#{cadastroColaboradorBean.usuario.colaborador.email}" />							
+						</p:panelGrid>
+						<p:panelGrid columns="4" layout="grid"
+							columnClasses="ui-grid-col-2, ui-grid-col-2, ui-grid-col-2, ui-grid-col-2"
+							styleClass="panelgrid-noborder">
+							<p:outputLabel value="CPF" for="cpf" />
+							<p:inputMask mask="999.999.999-99" id="cpf"
+								value="#{cadastroColaboradorBean.usuario.colaborador.cpf}" />
+							<p:outputLabel value="Identidade" for="rg" />
+							<p:inputText id="rg"
+								value="#{cadastroColaboradorBean.usuario.colaborador.identidade}" />
+							<p:outputLabel value="Fixo" />
+							<p:inputMask mask="(99)9999-9999"
+								value="#{cadastroColaboradorBean.usuario.colaborador.fixo}" />
+							<p:outputLabel value="Celular" />
+							<p:inputMask mask="(99)99999-9999"
+								value="#{cadastroColaboradorBean.usuario.colaborador.celular}" />
+						</p:panelGrid>
+
+						<p:panelGrid columns="6" layout="grid"
+							columnClasses="ui-grid-col-2, ui-grid-col-4, ui-grid-col-1, ui-grid-col-1,  ui-grid-col-1, ui-grid-col-2"
+							styleClass="panelgrid-noborder">
+							<p:outputLabel value="Logradouro" />
+							<p:inputText id="logradouro"
+								value="#{cadastroColaboradorBean.usuario.colaborador.endereco.logradouro}" />
+							<p:outputLabel value="número" />
+							<p:inputText
+								value="#{cadastroColaboradorBean.usuario.colaborador.endereco.numero}" />
+							<p:outputLabel value="Complemento" />
+							<p:inputText
+								value="#{cadastroColaboradorBean.usuario.colaborador.endereco.complemento}" />								
+						</p:panelGrid>
+
+						<p:panelGrid columns="6" layout="grid"
+							columnClasses="ui-grid-col-2, ui-grid-col-1, ui-grid-col-1, ui-grid-col-2, ui-grid-col-1, ui-grid-col-2"
+							styleClass="panelgrid-noborder">
+
+							<p:outputLabel value="CEP" />
+							<p:inputMask mask="99.999-999" id="cep"
+								value="#{cadastroColaboradorBean.usuario.colaborador.endereco.cep}" />
+							<p:outputLabel value="Bairro" />
+							<p:inputText
+								value="#{cadastroColaboradorBean.usuario.colaborador.endereco.bairro}" />
+							
+						</p:panelGrid>
+
+						<p:panelGrid columns="4" layout="grid"
+							columnClasses="ui-grid-col-2, ui-grid-col-3, ui-grid-col-1, ui-grid-col-2"
+							styleClass="panelgrid-noborder">
+
+							<p:outputLabel value="Cidade" />
+							<p:inputText
+								value="#{cadastroColaboradorBean.usuario.colaborador.endereco.cidade}" />
+							<p:outputLabel for="estado" value="Estado" />
+							<p:selectOneMenu id="estado"
+								value="#{cadastroColaboradorBean.usuario.colaborador.endereco.estado}">
+								<f:selectItems value="#{cadastroColaboradorBean.estados}"
+									var="estado" itemValue="#{estado}"
+									itemLabel="#{estado.descricao}" />
+							</p:selectOneMenu>
+
+						</p:panelGrid>
+					</p:tab>
+					<p:tab title="Credenciais de acesso" id="tbUsuario">
+						<p:panelGrid columns="2" layout="grid"
+							columnClasses="ui-grid-col-2, ui-grid-col-6"
+							styleClass="panelgrid-noborder">
+							<p:outputLabel value="Login" for="login" />
+							<p:inputText id="login"
+								value="#{cadastroColaboradorBean.usuario.login}" />
+
+							<p:outputLabel value="Ativo" />
+							<p:selectBooleanCheckbox
+								value="#{cadastroColaboradorBean.usuario.ativo}" />
+						</p:panelGrid>
+						<p:panelGrid columns="3" layout="grid"
+							columnClasses="ui-grid-col-1, ui-grid-col-10, ui-grid-col-1"
+							styleClass="panelgrid-noborder" style="margin-top: 10px">
+							<p:outputLabel />
+							<p:pickList id="pickList"
+								value="#{cadastroColaboradorBean.perfisModel}" var="perfil"
+								itemLabel="#{cadastroColaboradorBean.descricaoPerfil(perfil)}"
+								itemValue="#{perfil}" responsive="true">
+								<f:facet name="sourceCaption">Disponível</f:facet>
+								<f:facet name="targetCaption">Selecionado</f:facet>
+							</p:pickList>
+							<p:outputLabel />
+						</p:panelGrid>
+					</p:tab>
+				</p:tabView>
+			</div>
+		</h:form>
+	</ui:define>
+
+</ui:composition>

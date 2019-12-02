@@ -1,0 +1,85 @@
+<ui:composition template="/WEB-INF/templates/Layout.xhtml"
+	ounfxmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+	xmlns:f="http://xmlns.jcp.org/jsf/core"
+	xmlns:h="http://xmlns.jcp.org/jsf/html"
+	xmlns:p="http://primefaces.org/ui">
+	<head>
+<meta charset="UTF-8" />
+	</head>
+	<ui:define name="titulo">Alunos</ui:define>
+	<ui:define name="content">
+		<f:metadata>
+			<f:viewAction action="#{pesquisaAlunoBean.inicializar}" />
+		</f:metadata>
+		<h1 class="aw-page-title">Alunos</h1>
+		<h:form id="frm">
+			<p:messages id="msg" />
+			<div class="ui-fluid">
+				<p:toolbar>
+					<p:toolbarGroup align="right">
+						<p:commandButton value="Pesquisar" action="#{pesquisaAlunoBean.pesquisar()}" update="@form" />
+					</p:toolbarGroup>
+				</p:toolbar>
+				<p:panelGrid columns="2" layout="grid"
+					columnClasses="ui-grid-col-1, ui-grid-col-8"
+					styleClass="panelgrid-withmargin">
+					<p:outputLabel value="Aluno" />
+					<p:inputText value="#{pesquisaAlunoBean.filter.nomeAluno}" />
+					<p:outputLabel value="Responsável" />
+					<p:inputText
+						value="#{pesquisaAlunoBean.filter.nomeResponsavel}" />					
+				</p:panelGrid>
+				<p:panelGrid columns="2" layout="grid"
+					columnClasses="ui-grid-col-1, ui-grid-col-2"
+					styleClass="panelgrid-noborder">
+					<p:outputLabel value="CPF Resp." />
+					<p:inputMask mask="999.999.999-99"
+						value="#{pesquisaAlunoBean.filter.cpf}" />
+				</p:panelGrid>
+				
+				<p:dataTable value="#{pesquisaAlunoBean.alunos}" var="aluno"
+					style="margin-top: 20px" reflow="true"
+					emptyMessage="Nenhum aluno cadastrado" id="table">
+					<p:column headerText="Nome">
+						<h:outputText value="#{aluno.nome}" />
+					</p:column>
+					<p:column headerText="E-mail">
+						<h:outputText value="#{aluno.email}" />
+					</p:column>
+					<p:column headerText="contato" width="12%">
+						<h:outputText value="#{aluno.contato}" />
+					</p:column>
+					<p:column headerText="Responsável">
+						<h:outputText value="#{aluno.responsavel.nome}" />
+					</p:column>					
+					<p:column width="8%" exportable="false">
+						<p:button icon="ui-icon-pencil" style="width: 30px"
+							outcome="/alunos/CadastroAluno">
+							<f:param name="aluno" value="#{aluno.id}" />
+						</p:button>
+						<p:commandButton icon="ui-icon-trash" title="Excluir"
+							oncomplete="PF('confirmacao').show(); return false;"
+							process="@this" update=":frm:conf" style="width: 30px">
+							<f:setPropertyActionListener value="#{aluno}"
+								target="#{pesquisaAlunoBean.aluno}" />
+						</p:commandButton>
+					</p:column>
+
+				</p:dataTable>
+
+			</div>
+			<p:confirmDialog header="Excluão de Registro"
+				message="Tem certeza que deseja excluir #{pesquisaAlunoBean.aluno.nome}?"
+				widgetVar="confirmacao" id="conf">
+				<p:button value="Não"
+					onclick="PF('confirmacao').hide(); return false;" />
+				<p:commandButton value="Sim" update="@form"
+					oncomplete="PF('confirmacao').hide()" process="@this"
+					action="#{pesquisaAlunoBean.excluir}" />
+			</p:confirmDialog>
+		</h:form>
+
+	</ui:define>
+
+</ui:composition>

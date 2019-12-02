@@ -1,0 +1,32 @@
+body {
+	font-size: 12px;
+	font-family: Arial, Helvetica, sans-serif;
+	margin: 0px;
+	font-weight: normal;
+}
+
+.div-central {
+	margin-left: 30%;
+	margin-top: 15%;
+	width: 40%;
+	height: 30%;
+	background-color: white;
+	font-size: 15px;
+	border-radius: 5px;
+}
+
+.centralizado {
+	text-align: center;
+	margin: 10% 25%;
+}
+
+.logo {
+	width: 120px;
+	height: 80px;
+}
+
+@media ( max-width : 640px) {
+	.logo {
+		
+	}
+}

@@ -1,0 +1,173 @@
+<ui:composition template="/WEB-INF/templates/Layout.xhtml"
+	ounfxmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+	xmlns:f="http://xmlns.jcp.org/jsf/core"
+	xmlns:h="http://xmlns.jcp.org/jsf/html"
+	xmlns:p="http://primefaces.org/ui">
+	<head>
+<meta charset="UTF-8" />
+	</head>
+	<ui:define name="titulo">Mensalidades</ui:define>
+	<ui:define name="content">
+		<f:metadata>
+			<f:viewAction action="#{consultarPagarParcelaBean.inicializar}" />
+		</f:metadata>
+		<h1 class="aw-page-title">Consultar / Pagar parcelas</h1>
+		<h:form id="frm">
+			<p:messages id="msg" closable="true" />
+			<div class="ui-fluid">
+				<p:toolbar>
+					<p:toolbarGroup align="right">
+						<p:commandButton value="Pesquisar"
+							action="#{consultarPagarParcelaBean.pesquisar()}" update="@form" />
+					</p:toolbarGroup>
+				</p:toolbar>
+
+				<p:panelGrid columns="4" layout="grid"
+					columnClasses="ui-grid-col-1, ui-grid-col-2, ui-grid-col-1, ui-grid-col-2"
+					styleClass="panelgrid-withmargin">
+					<p:outputLabel value="Vencidas até" />
+					<p:calendar
+						value="#{consultarPagarParcelaBean.mensalidadeFilter.dataVenctoFim}"
+						pattern="dd/MM/yyyy" mask="true" />
+				</p:panelGrid>
+				<p:panelGrid columns="2" layout="grid"
+					columnClasses="ui-grid-col-1, ui-grid-col-2"
+					styleClass="panelgrid-noborder">
+					<p:outputLabel value="CPF" />
+					<p:inputMask mask="999.999.999-99"
+						value="#{consultarPagarParcelaBean.mensalidadeFilter.cpf}" />
+				</p:panelGrid>
+				<p:panelGrid columns="2" layout="grid"
+					columnClasses="ui-grid-col-1, ui-grid-col-8"
+					styleClass="panelgrid-noborder">
+					<p:outputLabel value="Responsável" />
+					<p:inputText
+						value="#{consultarPagarParcelaBean.mensalidadeFilter.nomeResponsavel}" />
+					<p:outputLabel value="Aluno" />
+					<p:inputText
+						value="#{consultarPagarParcelaBean.mensalidadeFilter.nomeAluno}" />
+				</p:panelGrid>
+				<p:separator />
+
+				<p:panelGrid columns="1" layout="grid"
+					columnClasses="ui-grid-col-12" styleClass="panelgrid-noborder"
+					rendered="#{!consultarPagarParcelaBean.pagandoParcela}">
+					<p:repeat var="parcela"
+						value="#{consultarPagarParcelaBean.mensalidades}">
+						<p:outputPanel>
+							<p:panelGrid columns="2" layout="grid"
+								columnClasses="ui-grid-col-10, ui-grid-col-2"
+								styleClass="panelgrid-noborder">
+								<h:panelGrid columns="4" cellpadding="5">
+									<h:outputText value="Contrato:" />
+									<h:outputText value="#{parcela.contrato.id}"
+										style="font-weight: bold" />
+									<h:outputText value="Parcela:" />
+									<h:outputText value="#{parcela.numParcela}"
+										style="font-weight: bold" />
+
+									<h:outputText value="Valor:" />
+									<h:outputText value="#{parcela.valorParcela}"
+										style="font-weight: bold">
+										<f:convertNumber type="currency" />
+									</h:outputText>
+
+									<h:outputText value="Vencimento:" />
+									<h:outputText value="#{parcela.vencimento}"
+										style="font-weight: bold">
+										<f:convertDateTime pattern="dd/MM/yyyy" />
+									</h:outputText>
+
+									<h:outputText value="Aluno:" />
+									<h:outputText value="#{parcela.contrato.aluno.nome}"
+										style="font-weight: bold" />
+								</h:panelGrid>
+
+								<p:commandButton value="Pagar Parcela"
+									action="#{consultarPagarParcelaBean.irParaPagamento()}"
+									process="@this" update="@form">
+									<f:setPropertyActionListener value="#{parcela}"
+										target="#{consultarPagarParcelaBean.mensalidade}" />
+								</p:commandButton>
+							</p:panelGrid>
+						</p:outputPanel>
+						<p:separator />
+					</p:repeat>
+				</p:panelGrid>
+				<p:panelGrid columns="1" layout="grid"
+					columnClasses="ui-grid-col-12" styleClass="panelgrid-noborder"
+					rendered="#{consultarPagarParcelaBean.pagandoParcela}" id="pnPagto">
+					<p:panelGrid columns="2" layout="grid"
+						columnClasses="ui-grid-col-2, ui-grid-col-2"
+						styleClass="panelgrid-noborder">
+						<h:outputText value="Aluno:" />
+						<h:outputText
+							value="#{consultarPagarParcelaBean.mensalidade.contrato.aluno.nome}"
+							style="font-weight: bold" />
+						<h:outputText value="Contrato:" />
+						<h:outputText
+							value="#{consultarPagarParcelaBean.mensalidade.contrato.id}"
+							style="font-weight: bold" />
+						<h:outputText value="Parcela:" />
+						<h:outputText
+							value="#{consultarPagarParcelaBean.mensalidade.numParcela}"
+							style="font-weight: bold" />
+
+						<h:outputText value="Vencimento:" />
+						<h:outputText
+							value="#{consultarPagarParcelaBean.mensalidade.vencimento}"
+							style="font-weight: bold">
+							<f:convertDateTime pattern="dd/MM/yyyy" />
+						</h:outputText>
+
+						<h:outputText value="Valor:" />
+						<h:outputText
+							value="#{consultarPagarParcelaBean.mensalidade.valorParcela}"
+							style="font-weight: bold">
+							<f:convertNumber type="currency" />
+						</h:outputText>
+
+						<h:outputText value="Juros/Multa:" />
+						<h:outputText value="#{consultarPagarParcelaBean.jurosMulta}"
+							style="font-weight: bold">
+							<f:convertNumber type="currency" />
+						</h:outputText>
+
+						<p:outputLabel value="Dia pagto" />
+						<p:calendar
+							value="#{consultarPagarParcelaBean.mensalidade.pagamento}"
+							mask="true" pattern="dd/MM/yyyy">
+							<p:ajax event="dateSelect"
+								listener="#{consultarPagarParcelaBean.calcaularValorApagar()}"
+								update=":frm:pnPagto" />
+
+							<p:ajax event="blur"
+								listener="#{consultarPagarParcelaBean.calcaularValorApagar()}"
+								update=":frm:pnPagto" />
+						</p:calendar>
+
+						<h:outputText value="Valor a Pagar:" />
+						<p:inputNumber
+							value="#{consultarPagarParcelaBean.mensalidade.valorPago}"
+							decimalSeparator="," thousandSeparator="." decimalPlaces="2" />
+					</p:panelGrid>
+					<p:separator />
+					<p:panelGrid columns="2" layout="grid"
+						columnClasses="ui-grid-col-2, ui-grid-col-2"
+						styleClass="panelgrid-noborder">
+
+						<p:commandButton value="Pagar parcela"
+							action="#{consultarPagarParcelaBean.efetuarPagamento()}"
+							update="@form" />
+						<p:commandButton value="Cancelar"
+							action="#{consultarPagarParcelaBean.cancelar()}" update="@form" />
+
+					</p:panelGrid>
+				</p:panelGrid>
+			</div>
+		</h:form>
+
+	</ui:define>
+
+</ui:composition>

@@ -1,0 +1,91 @@
+<ui:composition template="/WEB-INF/templates/Layout.xhtml"
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+	xmlns:f="http://xmlns.jcp.org/jsf/core"
+	xmlns:h="http://xmlns.jcp.org/jsf/html"
+	xmlns:p="http://primefaces.org/ui">
+
+	<ui:define name="titulo">Funcionários</ui:define>
+
+	<ui:define name="content">
+		<f:metadata>
+			<f:viewAction action="#{pesquisaColaboradorBean.inicializar}" />
+		</f:metadata>
+		<h1 class="aw-page-title">Colaboradores</h1>
+		<h:form id="frm">
+			<p:toolbar>
+				<p:toolbarGroup>
+					<p:button value="Novo colaborador"
+						outcome="/colaboradores/CadastroColaborador" disabled="#{!pesquisaColaboradorBean.permissaoNovo}" />
+				</p:toolbarGroup>
+				<p:toolbarGroup align="right">
+					<p:commandButton value="Pesquisar"
+						action="#{pesquisaColaboradorBean.pesquisar}" update="@form" />
+				</p:toolbarGroup>
+			</p:toolbar>
+			<p:messages autoUpdate="true" />
+			<div class="ui-fluid">
+				<p:panelGrid columns="2" layout="grid"
+					columnClasses="ui-grid-col-1, ui-grid-col-6"
+					styleClass="panelgrid-withmargin">
+					<p:outputLabel value="Nome" for="nome" />
+					<p:inputText id="nome"
+						value="#{pesquisaColaboradorBean.filter.nome}" />
+				</p:panelGrid>
+				<p:panelGrid columns="2" layout="grid"
+					columnClasses="ui-grid-col-1, ui-grid-col-2"
+					styleClass="panelgrid-noborder">
+					<p:outputLabel value="CPF" />
+					<p:inputMask mask="999.999.999-99"
+						value="#{pesquisaColaboradorBean.filter.cpf}" />
+					<p:outputLabel value="Login" />
+					<p:inputText value="#{pesquisaColaboradorBean.filter.login}" />
+				</p:panelGrid>
+			</div>
+			<p:dataTable value="#{pesquisaColaboradorBean.listaFiltrada}"
+				var="func" style="margin-top: 20px" reflow="true"
+				emptyMessage="Nenhum colaborador cadastrado" id="table"
+				paginator="true" rows="10" rowsPerPageTemplate="10,20,30"
+				paginatorPosition="bottom"
+				paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}">
+				<p:column headerText="Nome">
+					<h:outputText value="#{func.colaborador.nome}" />
+				</p:column>
+				<p:column headerText="Login" width="20%">
+					<h:outputText value="#{func.login}" />
+				</p:column>
+				<p:column headerText="CPF" width="15%">
+					<h:outputText value="#{func.colaborador.cpf}" />
+				</p:column>
+				<p:column headerText="RG" width="15%">
+					<h:outputText value="#{func.colaborador.identidade}" />
+				</p:column>
+				<p:column headerText="Situação" width="7%" priority="6">
+					<h:outputText value="#{func.ativoPesquisa}" />
+				</p:column>
+				<p:column width="8%" exportable="false">
+					<p:button icon="ui-icon-pencil" title="Cadastro de funcionários"
+						outcome="/colaboradores/CadastroColaborador" style="width: 30px" disabled="#{!pesquisaColaboradorBean.permissaoEditar}">
+						<f:param name="usuario" value="#{func.id}" />
+					</p:button>
+					<p:commandButton icon="ui-icon-trash" title="Excluir"
+						oncomplete="PF('confirmacao').show(); return false;"
+						process="@this" update=":frm:conf" style="width: 30px" disabled="#{!pesquisaColaboradorBean.permissaoExcluir}">
+						<f:setPropertyActionListener value="#{func}"
+							target="#{pesquisaColaboradorBean.usuarioSelecionado}" />
+					</p:commandButton>
+				</p:column>
+			</p:dataTable>
+			<p:confirmDialog header="Excluão de Registro"
+				message="Confirma excluir o funcionário #{pesquisaColaboradorBean.colaboradorSelecionado.colaborador.nome}?"
+				widgetVar="confirmacao" id="conf">
+				<p:button value="Não"
+					onclick="PF('confirmacao').hide(); return false;" />
+				<p:commandButton value="Sim" update="@form"
+					oncomplete="PF('confirmacao').hide()" process="@this"
+					action="#{pesquisaColaboradorBean.excluir}" />
+			</p:confirmDialog>
+		</h:form>
+	</ui:define>
+
+</ui:composition>

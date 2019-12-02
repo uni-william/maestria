@@ -1,0 +1,62 @@
+<ui:composition template="/WEB-INF/templates/Layout.xhtml"
+	ounfxmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+	xmlns:f="http://xmlns.jcp.org/jsf/core"
+	xmlns:h="http://xmlns.jcp.org/jsf/html"
+	xmlns:p="http://primefaces.org/ui">
+	<head>
+<meta charset="UTF-8" />
+	</head>
+	<ui:define name="titulo">Materials</ui:define>
+	<ui:define name="content">
+		<f:metadata>
+			<f:viewAction action="#{pesquisaMaterialBean.inicializar}" />
+		</f:metadata>
+		<h1 class="aw-page-title">Materiais</h1>
+		<h:form id="frm">
+			<p:growl showDetail="true" />
+			<div class="ui-fluid">
+				<p:toolbar>
+					<p:toolbarGroup align="right">
+						<p:button value="Novo material"
+							outcome="/materiais/CadastroMaterial" />
+					</p:toolbarGroup>
+				</p:toolbar>
+
+				<p:growl id="msg" />
+				<p:dataTable value="#{pesquisaMaterialBean.materiais}"
+					var="material" style="margin-top: 20px" reflow="true"
+					emptyMessage="Nenhuma material cadastrada" id="table">
+					<p:column headerText="Descrição">
+						<h:outputText value="#{material.descricao}" />
+					</p:column>
+					<p:column width="8%" exportable="false">
+						<p:button icon="ui-icon-pencil" style="width: 30px"
+							outcome="/materiais/CadastroMaterial">
+							<f:param name="material" value="#{material.id}" />
+						</p:button>
+						<p:commandButton icon="ui-icon-trash" title="Excluir"
+							oncomplete="PF('confirmacao').show(); return false;"
+							process="@this" update=":frm:conf" style="width: 30px">
+							<f:setPropertyActionListener value="#{material}"
+								target="#{pesquisaMaterialBean.material}" />
+						</p:commandButton>
+					</p:column>
+
+				</p:dataTable>
+
+			</div>
+			<p:confirmDialog header="Excluão de Registro"
+				message="Tem certeza que deseja excluir a material #{pesquisaMaterialBean.material.descricao}?"
+				widgetVar="confirmacao" id="conf">
+				<p:button value="Não"
+					onclick="PF('confirmacao').hide(); return false;" />
+				<p:commandButton value="Sim" update="@form"
+					oncomplete="PF('confirmacao').hide()" process="@this"
+					action="#{pesquisaMaterialBean.excluir}" />
+			</p:confirmDialog>
+		</h:form>
+
+	</ui:define>
+
+</ui:composition>

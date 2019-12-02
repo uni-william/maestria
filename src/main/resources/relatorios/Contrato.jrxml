@@ -1,0 +1,642 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with Jaspersoft Studio version 6.6.0.final using JasperReports Library version 6.6.0  -->
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="Contrato" pageWidth="595" pageHeight="900" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="8d044eb2-08f4-428e-880c-85867bbb9983">
+	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="maestria"/>
+	<property name="com.jaspersoft.studio.data.sql.SQLQueryDesigner.sash.w1" value="0"/>
+	<property name="com.jaspersoft.studio.data.sql.SQLQueryDesigner.sash.w2" value="1000"/>
+	<property name="com.jaspersoft.studio.unit." value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.pageHeight" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.pageWidth" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.topMargin" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.bottomMargin" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.leftMargin" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.rightMargin" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.columnWidth" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.columnSpacing" value="pixel"/>
+	<parameter name="contrato" class="java.lang.Long"/>
+	<parameter name="logo" class="java.lang.String"/>
+	<parameter name="extensoMatricula" class="java.lang.String"/>
+	<parameter name="extensoMensalidade" class="java.lang.String"/>
+	<parameter name="dataExtenso" class="java.lang.String"/>
+	<parameter name="empresa" class="java.lang.Long"/>
+	<queryString language="SQL">
+		<![CDATA[select
+  c.id,
+  r.nome responsavel,
+  r.cpf,
+  r.identidade,
+  r.orgaoEmissor,
+  concat(concat(concat(concat(r.logradouro, ', ', r.numero), ' ', ifnull(r.complemento, ' ')), ifnull(r.bairro, '')), concat(r.cidade, ', ', r.estado),' ', ifnull(r.cep, '')) endereco, 
+  r.celular,
+  r.telefone,
+  r.email,
+  case
+    when a.alunoEResponsavel = 1 then null
+    else a.nome
+  end aluno,
+  c.matricula,
+  c.valor,
+  c.cargaHorariaSemanal,
+  case
+   when c.tipoMensalidade = 'MENSAL' then 'com vencimento a cada 30 dias a partir da assinatura deste contrato'
+   when c.tipoMensalidade = 'UNICA' then 'em parcela única'
+  end as tipoMensalidade,
+  c.dataCriacao,
+  cu.descricao,
+  cu.metodologia,
+  cu.ementa,
+  e.multa,
+  e.jurosDia,
+  e.textoParagrafoUnico,
+  concat(concat(e.logradouro, ifnull(concat(', ', e.numero), '')), ' - ', e.bairro) enderecoEmpresa,
+  e.cep,
+  e.fixo
+  from contratos c
+inner join alunos a on c.aluno_id = a.id
+inner join responsaveis r on a.responsavel_id = r.id
+inner join cursos cu on c.curso_id = cu.id, empresas e
+ where c.id = $P{contrato}
+    and e.id = $P{empresa} ]]>
+	</queryString>
+	<field name="id" class="java.lang.Long">
+		<property name="com.jaspersoft.studio.field.label" value="id"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="contratos"/>
+	</field>
+	<field name="responsavel" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="responsavel"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="responsaveis"/>
+	</field>
+	<field name="cpf" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="cpf"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="responsaveis"/>
+	</field>
+	<field name="identidade" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="identidade"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="responsaveis"/>
+	</field>
+	<field name="orgaoEmissor" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="orgaoEmissor"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="responsaveis"/>
+	</field>
+	<field name="endereco" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="endereco"/>
+	</field>
+	<field name="celular" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="celular"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="responsaveis"/>
+	</field>
+	<field name="telefone" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="telefone"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="responsaveis"/>
+	</field>
+	<field name="email" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="email"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="responsaveis"/>
+	</field>
+	<field name="aluno" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="aluno"/>
+	</field>
+	<field name="matricula" class="java.math.BigDecimal">
+		<property name="com.jaspersoft.studio.field.label" value="matricula"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="contratos"/>
+	</field>
+	<field name="valor" class="java.math.BigDecimal">
+		<property name="com.jaspersoft.studio.field.label" value="valor"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="contratos"/>
+	</field>
+	<field name="cargaHorariaSemanal" class="java.math.BigDecimal">
+		<property name="com.jaspersoft.studio.field.label" value="cargaHorariaSemanal"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="contratos"/>
+	</field>
+	<field name="tipoMensalidade" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="tipoMensalidade"/>
+	</field>
+	<field name="dataCriacao" class="java.sql.Date">
+		<property name="com.jaspersoft.studio.field.label" value="dataCriacao"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="contratos"/>
+	</field>
+	<field name="descricao" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="descricao"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="cursos"/>
+	</field>
+	<field name="metodologia" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="metodologia"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="cursos"/>
+	</field>
+	<field name="ementa" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="ementa"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="cursos"/>
+	</field>
+	<field name="multa" class="java.math.BigDecimal">
+		<property name="com.jaspersoft.studio.field.label" value="multa"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="empresas"/>
+	</field>
+	<field name="jurosDia" class="java.math.BigDecimal">
+		<property name="com.jaspersoft.studio.field.label" value="jurosDia"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="empresas"/>
+	</field>
+	<field name="textoParagrafoUnico" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="textoParagrafoUnico"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="empresas"/>
+	</field>
+	<field name="enderecoEmpresa" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="enderecoEmpresa"/>
+	</field>
+	<field name="cep" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="cep"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="empresas"/>
+	</field>
+	<field name="fixo" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="fixo"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="empresas"/>
+	</field>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band height="273">
+			<image scaleImage="FillFrame">
+				<reportElement stretchType="RelativeToTallestObject" x="10" y="4" width="170" height="60" uuid="8583e5e7-8121-43be-a6c2-6f67a61171cd"/>
+				<imageExpression><![CDATA[$P{logo}]]></imageExpression>
+			</image>
+			<staticText>
+				<reportElement x="13" y="82" width="547" height="45" uuid="cf8dc8f4-703c-4c79-a690-98e45c617713"/>
+				<textElement textAlignment="Justified">
+					<font size="11"/>
+				</textElement>
+				<text><![CDATA[Maestria -Soluções em Desenvolvimento de Seres Humanos Ltda, ora denominada contratada, empresa situada à Av. Profª Cacilda Pedroso nº 16, Conj. Canaã, Alvorada I, CNPJ nº 03.862.155/0001-25 e Inscrição Municipal nº 9599501]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="210" y="62" width="100" height="23" uuid="9d4f6e13-e4bc-4f48-9650-949906ca216c"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[CONTRATADA:]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="59" y="154" width="499" height="20" uuid="ed46637b-2f03-4f36-a91f-e876f819feda"/>
+				<textElement verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$F{responsavel}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="16" y="154" width="37" height="20" uuid="8ce5afe9-0825-4ff2-9179-62827c2657d4"/>
+				<textElement verticalAlignment="Middle"/>
+				<text><![CDATA[Nome:]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="59" y="177" width="94" height="20" uuid="ee93d54f-9939-4f8f-860c-d58fcd6fb198"/>
+				<textElement verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$F{cpf}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="16" y="177" width="37" height="20" uuid="69bb1208-eb04-4d17-a28b-948b59c151f5"/>
+				<textElement verticalAlignment="Middle"/>
+				<text><![CDATA[CPF:]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="216" y="177" width="94" height="20" uuid="e2228589-c086-4a7a-add5-48d8f016233d"/>
+				<textElement verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$F{identidade}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="183" y="177" width="27" height="20" uuid="87855125-bfe7-4b2c-889b-e1d5ce22cac7"/>
+				<textElement verticalAlignment="Middle"/>
+				<text><![CDATA[RG:]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="471" y="177" width="94" height="20" uuid="6927b5ef-c266-4182-b5d2-b97d5b879733"/>
+				<textElement verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$F{orgaoEmissor}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="390" y="177" width="75" height="20" uuid="17edbebb-ab28-41e0-a99a-7bfe6e96219f"/>
+				<textElement verticalAlignment="Middle"/>
+				<text><![CDATA[Órgão Emissor:]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="59" y="201" width="499" height="20" uuid="b1af2775-98ca-4b09-975f-8219a70044b7"/>
+				<textElement verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$F{endereco}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="16" y="201" width="37" height="20" uuid="7e7c7c2f-0d36-42b0-8316-ffe1410ad809"/>
+				<textElement verticalAlignment="Middle"/>
+				<text><![CDATA[Endereço:]]></text>
+			</staticText>
+			<textField isBlankWhenNull="true">
+				<reportElement x="118" y="224" width="440" height="20" uuid="7785a4d3-bfe3-4388-8756-0ed05980bd75"/>
+				<textElement verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$F{aluno}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="16" y="224" width="97" height="20" uuid="16c8e072-15dc-4d1d-bf71-be5b4e1cc0cf"/>
+				<textElement verticalAlignment="Middle"/>
+				<text><![CDATA[Aluno (caso menor):]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="62" y="248" width="144" height="20" uuid="c484cccd-59b8-48c3-bc9f-90f25b0a78d0"/>
+				<textElement verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$F{celular}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="286" y="249" width="239" height="20" uuid="57b4d0ad-56be-417c-90ac-15a364fda8b7"/>
+				<textElement verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$F{email}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="243" y="249" width="37" height="20" uuid="1b5f07e8-d89c-438b-9c4d-c579d48e0847"/>
+				<textElement verticalAlignment="Middle"/>
+				<text><![CDATA[E-mail:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="16" y="248" width="43" height="20" uuid="e5a9d152-5bee-4039-803d-2c3713b331a8"/>
+				<textElement verticalAlignment="Middle"/>
+				<text><![CDATA[Telefone:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="211" y="127" width="100" height="23" uuid="48759375-6be7-4b6d-99b5-745f899f31dc"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[CONTRATANTE:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="235" y="13" width="295" height="37" uuid="afed5534-f750-46e5-a8e2-735d0a9ef2fc"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="11"/>
+				</textElement>
+				<text><![CDATA[CONTRATO DE PRESTAÇÃO DE SERVIÇOS PARA MINISTRAR CURSOS DE INGLÊS]]></text>
+			</staticText>
+			<line>
+				<reportElement x="0" y="270" width="555" height="3" uuid="eff7b460-f1b9-411a-af32-f71a1f4cec6b"/>
+			</line>
+		</band>
+	</title>
+	<detail>
+		<band height="522">
+			<staticText>
+				<reportElement x="10" y="7" width="176" height="13" uuid="ebdb0362-9b42-455a-974e-7460fb087947"/>
+				<textElement verticalAlignment="Middle">
+					<font isUnderline="true"/>
+				</textElement>
+				<text><![CDATA[CLÁUSULA PRIMEIRA - DO OBJETO]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="10" y="25" width="480" height="13" uuid="1fabaacb-de2e-4c43-9ba9-7955c1bddc75"/>
+				<textElement textAlignment="Justified" verticalAlignment="Middle"/>
+				<text><![CDATA[A prestadora de serviço ministrará aulas de inglês ao contratante de acordo com o curso escolhido abaixo:]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="50" y="42" width="186" height="18" uuid="3150b5e5-3a1d-4ef9-9351-645be9c554bb"/>
+				<textElement verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$F{descricao}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="9" y="42" width="35" height="18" uuid="3d67d328-b8b0-4491-84af-34082a90188d"/>
+				<textElement verticalAlignment="Middle"/>
+				<text><![CDATA[Curso:]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="9" y="60" width="315" height="18" uuid="d23e4109-23e2-42e8-8e1b-99be9d0e2e9e"/>
+				<textElement verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$F{metodologia}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0.##">
+				<reportElement x="77" y="80" width="22" height="18" uuid="e2c54b47-94fd-43a9-9c43-f91f26a8ccef"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$F{cargaHorariaSemanal}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="9" y="80" width="66" height="18" uuid="5877b6ec-451d-41eb-917a-31a94bfcaf15"/>
+				<textElement verticalAlignment="Middle"/>
+				<text><![CDATA[Carga Horária:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="104" y="80" width="71" height="18" uuid="bb656ec9-cbae-42a7-bec2-8040f2319d14"/>
+				<textElement verticalAlignment="Middle"/>
+				<text><![CDATA[h/Semana]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="9" y="100" width="88" height="18" uuid="53b4a0d3-19a4-422f-8d11-83d3ce336985"/>
+				<textElement verticalAlignment="Middle"/>
+				<text><![CDATA[Valor da matrícula:]]></text>
+			</staticText>
+			<textField pattern="¤#,##0.00;¤-#,##0.00">
+				<reportElement x="96" y="100" width="64" height="18" uuid="9c14fef2-0f7c-4d53-8a68-28561cc481a2"/>
+				<textElement textAlignment="Left" verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$F{matricula}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="162" y="100" width="355" height="18" uuid="8d9a6d7d-3f53-4736-9dc6-58c1b3d0fe9e"/>
+				<textElement verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$P{extensoMatricula}]]></textFieldExpression>
+			</textField>
+			<textField pattern="¤#,##0.00;¤-#,##0.00">
+				<reportElement x="116" y="120" width="59" height="18" uuid="8e367352-d2e0-46aa-8ad6-c3a6fcf34712"/>
+				<textElement textAlignment="Left" verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$F{valor}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="9" y="120" width="102" height="18" uuid="ef590f20-62c6-49a7-88df-d0d45ec0abac"/>
+				<textElement verticalAlignment="Middle"/>
+				<text><![CDATA[Valor da mensalidade:]]></text>
+			</staticText>
+			<textField isBlankWhenNull="true">
+				<reportElement x="176" y="120" width="355" height="18" uuid="18ea65f4-e480-49bf-8b2b-9e5f47e67055"/>
+				<textElement verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$P{extensoMensalidade}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="10" y="139" width="538" height="18" uuid="5e810959-33e5-42bf-a167-3172518fbbc8"/>
+				<textElement textAlignment="Left" verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$F{tipoMensalidade}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="9" y="159" width="539" height="31" uuid="b2bb7f8c-6a7e-4a3d-8d4f-164e40b8f81b"/>
+				<textElement textAlignment="Justified" verticalAlignment="Middle"/>
+				<text><![CDATA[Para ingresso no curso, considera-se o pagamento da matrícula e primeira mensalidade no ato da assinatura deste contrato.]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="10" y="197" width="176" height="13" uuid="f94875c3-41fc-4d9a-b3a8-a149d3d911b4"/>
+				<textElement verticalAlignment="Middle">
+					<font isUnderline="true"/>
+				</textElement>
+				<text><![CDATA[CLÁUSULA SEGUNDA - VIGÊNCIA]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="9" y="219" width="471" height="21" uuid="50cb123e-e203-4bf5-b2b7-e5903fc3e20c"/>
+				<textElement textAlignment="Justified" verticalAlignment="Middle"/>
+				<text><![CDATA[O presente contrato tem duração igual ao tempo que o aluno dispender no curso, com vigência a partir de]]></text>
+			</staticText>
+			<textField pattern="dd/MM/yyyy">
+				<reportElement x="483" y="221" width="65" height="18" uuid="b651ee8f-8d74-4231-bdda-15802d36e47d"/>
+				<textElement verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$F{dataCriacao}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="9" y="242" width="540" height="42" uuid="25f3989d-608b-4de6-ac7f-76e0aaaf4a5c"/>
+				<textElement textAlignment="Justified" verticalAlignment="Middle"/>
+				<text><![CDATA[Haverá recesso escolar de 15 dias no mesmo período das férias escolares do sistema de ensino público e privado da cidade de Manaus no meio do ano e no final do ano, sem alteração nas datas de vencimentos das mensalidades e nem reposição de horas/aulas.]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="10" y="296" width="260" height="13" uuid="883dce9b-6bf5-40a1-830e-2f94120ddc1b"/>
+				<textElement verticalAlignment="Middle">
+					<font isUnderline="true"/>
+				</textElement>
+				<text><![CDATA[CLÁUSULA TERCEIRA - VALOR DA CONTRATAÇÃO]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="9" y="311" width="541" height="29" uuid="252785ea-ca69-48ad-b23c-106ac76ac7fd"/>
+				<textElement textAlignment="Justified" verticalAlignment="Middle"/>
+				<text><![CDATA[Os valores de contratação da prestação do serviço serão definidos conforme a escolha do curso definido na CLÁUSULA PRIMEIRA]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="10" y="346" width="260" height="13" uuid="de9bee3a-5385-48e5-9e60-e9deb8b79606"/>
+				<textElement verticalAlignment="Middle">
+					<font isUnderline="true"/>
+				</textElement>
+				<text><![CDATA[CLÁUSULA QUARTA - CONDIÇÃO DE PAGAMENTO]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="9" y="361" width="541" height="29" uuid="fcedc7c8-8f4d-43c6-9cb6-4f2a899f057f"/>
+				<textElement textAlignment="Justified" verticalAlignment="Middle"/>
+				<text><![CDATA[As condições de pagamento referentes à prestação dos serviços serão definidos conforme a escolha do curso definido na CLÁUSULA PRIMEIRA]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="9" y="391" width="216" height="19" uuid="49672d4a-4172-4a53-8983-077ebdb2a800"/>
+				<textElement textAlignment="Justified" verticalAlignment="Middle">
+					<font isBold="false"/>
+				</textElement>
+				<text><![CDATA[Em caso de atraso de pagamento será aplicada ]]></text>
+			</staticText>
+			<textField pattern="#,##0.##">
+				<reportElement x="266" y="392" width="14" height="18" uuid="5d153622-6e11-485d-b5e4-56b6d6b48512"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{multa}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="279" y="391" width="228" height="19" uuid="35813a31-325d-462b-8ed2-0922de153e62"/>
+				<textElement textAlignment="Justified" verticalAlignment="Middle">
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[% ao mês após o primeiro dia de atraso e juros de ]]></text>
+			</staticText>
+			<textField pattern="#,##0.##">
+				<reportElement x="508" y="392" width="21" height="18" uuid="3e399bb6-99ab-461a-aef7-b0eb5ef3b842"/>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{jurosDia}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="226" y="391" width="44" height="19" uuid="8336d1e6-b42d-45bc-94d0-e0f5ee345d2a"/>
+				<textElement textAlignment="Justified" verticalAlignment="Middle">
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[multa de]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="531" y="391" width="14" height="19" uuid="f26bf2d7-6140-43e7-9bb2-9dfc69ddffbd"/>
+				<textElement textAlignment="Justified" verticalAlignment="Middle">
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[%]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="9" y="410" width="81" height="19" uuid="63ad68d9-3efc-4701-a52d-f930d179d16f"/>
+				<textElement textAlignment="Justified" verticalAlignment="Middle">
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[por dia de atraso]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="9" y="431" width="378" height="19" uuid="a872fbc9-28d1-40c3-a085-af56c07edf72"/>
+				<textElement textAlignment="Justified" verticalAlignment="Middle">
+					<font isBold="false" isUnderline="true"/>
+				</textElement>
+				<text><![CDATA[O valor da primeira mensalidade será cobrado concomitantemente com a matricula.]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="389" y="431" width="159" height="19" uuid="906511a4-bdd7-42a4-8958-ba7079ebc53c"/>
+				<textElement textAlignment="Justified" verticalAlignment="Middle">
+					<font isBold="false"/>
+				</textElement>
+				<text><![CDATA[No caso de majoração do valor da]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="9" y="451" width="539" height="29" uuid="c3da5b0d-db6d-4c02-9187-64e214ad486b"/>
+				<textElement textAlignment="Justified" verticalAlignment="Middle">
+					<font isBold="false"/>
+				</textElement>
+				<text><![CDATA[mensalidade a escola se obriga a informar com pelo menos 30 dias de antecedência por escrito aos alunos ou responsáveis.]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="9" y="484" width="539" height="29" uuid="e3397b95-0380-487a-bb17-948c2730dc59"/>
+				<textElement textAlignment="Justified" verticalAlignment="Middle">
+					<font isBold="false"/>
+				</textElement>
+				<text><![CDATA[Os pagamentos de mensalidades deverão ser realizados através de carnê emitido em nome do contratante na própria escola, com cartão de débito ou em espécie.]]></text>
+			</staticText>
+		</band>
+	</detail>
+	<pageFooter>
+		<band height="64">
+			<textField>
+				<reportElement x="122" y="5" width="287" height="17" uuid="7f478461-b0b1-4b67-81a1-bf38b197d251"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$F{enderecoEmpresa}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="182" y="27" width="69" height="17" uuid="246e97e5-18e8-4552-9f82-db2e291456e3"/>
+				<textElement textAlignment="Left" verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$F{fixo}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="150" y="26" width="30" height="20" uuid="5e01e66e-b300-444a-bf61-f75031a6d2ad"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle"/>
+				<text><![CDATA[Fone:]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="332" y="27" width="69" height="17" uuid="1f8c7954-2895-42eb-b9a2-da61b09657e1"/>
+				<textElement textAlignment="Left" verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$F{cep}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="300" y="26" width="30" height="20" uuid="0e2f267c-e6e6-4c43-81c9-7accc7583459"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle"/>
+				<text><![CDATA[CEP:]]></text>
+			</staticText>
+		</band>
+	</pageFooter>
+	<summary>
+		<band height="859">
+			<staticText>
+				<reportElement x="10" y="93" width="103" height="13" uuid="96defbb7-301c-4527-be59-304aaff5288f"/>
+				<textElement verticalAlignment="Middle">
+					<font isUnderline="true"/>
+				</textElement>
+				<text><![CDATA[PARÁGRAFO ÚNICO]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="10" y="223" width="215" height="13" uuid="83e5b02c-03d2-4d1e-bb32-5661a0a9e0ea"/>
+				<textElement verticalAlignment="Middle">
+					<font isUnderline="true"/>
+				</textElement>
+				<text><![CDATA[CLÁUSULA QUINTA - RESPONSABILIDADES]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="9" y="244" width="539" height="29" uuid="3381cf17-4883-4b89-a584-8a59aa27b30b"/>
+				<textElement textAlignment="Justified" verticalAlignment="Middle">
+					<font isBold="false"/>
+				</textElement>
+				<text><![CDATA[A contratada assume total responsabilidade pela utilização da metodologia usada dentro dos preceitos por ela emanados.]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="10" y="277" width="215" height="13" uuid="3ee26924-156d-479c-a300-d8e9d9a6727c"/>
+				<textElement verticalAlignment="Middle">
+					<font isUnderline="true"/>
+				</textElement>
+				<text><![CDATA[CLÁUSULA SEXTA - DO FÓRUM]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="9" y="294" width="539" height="29" uuid="88eb870f-ef15-4db7-804d-9943598ecca4"/>
+				<textElement textAlignment="Justified" verticalAlignment="Middle">
+					<font isBold="false"/>
+				</textElement>
+				<text><![CDATA[Para todos os efeitos legais, as partes contratantes elegem a cidade de Manaus, Estado do Amazonas, para fórum deste contrato, renunciando a qualquer outro que possa invocar por mais privilégios que seja.]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="9" y="325" width="539" height="29" uuid="cf1350ce-2d8b-4fb6-bb39-8144a64efe42"/>
+				<textElement textAlignment="Justified" verticalAlignment="Middle">
+					<font isBold="false"/>
+				</textElement>
+				<text><![CDATA[PARÁGRAFO ÚNICO - Qualquer dúvidas surgidas porventura não constantes deste contrato serão diirimidas entre as partes.]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="9" y="355" width="539" height="29" uuid="0d124915-4c32-44c3-a899-f74fdf53a166"/>
+				<textElement textAlignment="Justified" verticalAlignment="Middle">
+					<font isBold="false"/>
+				</textElement>
+				<text><![CDATA[E por estaremassim contratados, assinam o presente em 2 (duas) vias de igual teor, ficando a primeira de posse do contratante.]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="9" y="405" width="41" height="15" uuid="f6f2603c-4f83-4bc6-a7b1-3e20b0b5ba45"/>
+				<textElement textAlignment="Justified" verticalAlignment="Middle">
+					<font isBold="false"/>
+				</textElement>
+				<text><![CDATA[Manaus,]]></text>
+			</staticText>
+			<textField isBlankWhenNull="true">
+				<reportElement x="50" y="405" width="300" height="15" uuid="98f61853-6c56-442e-aa9e-13b930af9050"/>
+				<textElement verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$P{dataExtenso}]]></textFieldExpression>
+			</textField>
+			<line>
+				<reportElement x="10" y="759" width="241" height="1" uuid="c892f530-67ef-468f-900d-9e7dbf8303e5"/>
+			</line>
+			<staticText>
+				<reportElement x="84" y="760" width="76" height="15" uuid="7056e55e-0864-4e03-9a7d-c49b356239b4"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font isBold="false"/>
+				</textElement>
+				<text><![CDATA[Contratante]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="374" y="760" width="76" height="15" uuid="3de31187-8174-49fa-aad2-53142db6805b"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font isBold="false"/>
+				</textElement>
+				<text><![CDATA[Contratada]]></text>
+			</staticText>
+			<line>
+				<reportElement x="300" y="759" width="241" height="1" uuid="db7538fd-ad2e-4295-aa2e-fe597c7155ac"/>
+			</line>
+			<image scaleImage="FillFrame">
+				<reportElement stretchType="RelativeToTallestObject" x="10" y="4" width="170" height="60" uuid="f352630a-d039-4c92-84a3-6ad690f0f80b"/>
+				<imageExpression><![CDATA[$P{logo}]]></imageExpression>
+			</image>
+			<staticText>
+				<reportElement x="235" y="13" width="295" height="37" uuid="39b0d1eb-a7c1-44dd-a0d5-9b70c4a33db2"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="11"/>
+				</textElement>
+				<text><![CDATA[CONTRATO DE PRESTAÇÃO DE SERVIÇOS PARA MINISTRAR CURSOS DE INGLÊS]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="9" y="112" width="539" height="106" uuid="7867d6f1-d600-4424-99b1-3120a139a1ba"/>
+				<textElement textAlignment="Justified">
+					<font isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{textoParagrafoUnico}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="182" y="827" width="69" height="17" uuid="7a741ee0-3e00-4479-9776-88f3d370d11b"/>
+				<textElement textAlignment="Left" verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$F{fixo}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="332" y="827" width="69" height="17" uuid="27903474-fe6c-4cca-a77f-50a395035ec7"/>
+				<textElement textAlignment="Left" verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$F{cep}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="150" y="826" width="30" height="20" uuid="33afb947-bfc1-465c-900e-fc10db484784"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle"/>
+				<text><![CDATA[Fone:]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="122" y="805" width="287" height="17" uuid="16dbcd08-62ff-4be4-8d24-e1426b88e01e"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$F{enderecoEmpresa}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="300" y="826" width="30" height="20" uuid="1af058ce-8089-4df7-9b8b-53c484d8d22c"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle"/>
+				<text><![CDATA[CEP:]]></text>
+			</staticText>
+		</band>
+	</summary>
+</jasperReport>

@@ -1,0 +1,77 @@
+<ui:composition template="/WEB-INF/templates/Layout.xhtml"
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+	xmlns:f="http://xmlns.jcp.org/jsf/core"
+	xmlns:h="http://xmlns.jcp.org/jsf/html"
+	xmlns:p="http://primefaces.org/ui">
+
+	<ui:define name="titulo">Cadastro aluno</ui:define>
+
+	<ui:define name="content">
+		<f:metadata>
+			<f:viewAction action="#{cadastroAlunoBean.inicializar()}" />
+			<f:viewParam name="aluno" value="#{cadastroAlunoBean.aluno}" />
+			<f:viewParam name="responsavel"
+				value="#{cadastroAlunoBean.responsavel}" />
+		</f:metadata>
+
+		<h1 class="aw-page-title">#{cadastroAlunoBean.editando ? 'Edição
+			de aluno' : 'Novo aluno'}</h1>
+		<br />
+		<h:form id="frm">
+			<p:focus context="frm" />
+			<p:toolbar>
+				<p:toolbarGroup>
+					<p:commandButton value="#{cadastroAlunoBean.captionSalvar}"
+						action="#{cadastroAlunoBean.salvar}" update="@form" />
+					<p:button value="Materiais do aluno"
+						outcome="/alunos/MateriaisAluno"
+						disabled="#{!cadastroAlunoBean.editando}">
+						<f:param name="aluno" value="#{cadastroAlunoBean.aluno.id}" />
+					</p:button>
+				</p:toolbarGroup>
+				<p:toolbarGroup align="right">
+					<p:button value="Pesquisa" outcome="/alunos/PesquisaAlunos" />
+				</p:toolbarGroup>
+			</p:toolbar>
+
+			<p:messages closable="true" id="msg" />
+			<div class="ui-fluid">
+				<p:panelGrid columns="2" layout="grid"
+					columnClasses="ui-grid-col-1, ui-grid-col-10"
+					styleClass="panelgrid-noborder" style="margin-top: 10px;">
+					<p:outputLabel value="Responsável" />
+					<p:outputLabel value="#{cadastroAlunoBean.aluno.responsavel.nome}" />
+				</p:panelGrid>
+				<p:separator />
+				<p:panelGrid columns="2" layout="grid"
+					columnClasses="ui-grid-col-1, ui-grid-col-10"
+					styleClass="panelgrid-noborder">
+					<p:outputLabel value="Nome" for="nome" />
+					<p:inputText id="nome" value="#{cadastroAlunoBean.aluno.nome}" />
+				</p:panelGrid>
+				<p:panelGrid columns="5" layout="grid"
+					columnClasses="ui-grid-col-1, ui-grid-col-2, ui-grid-col-1, ui-grid-col-2, ui-grid-col-2"
+					styleClass="panelgrid-noborder">
+					<p:outputLabel value="Contato" />
+					<p:inputMask mask="(99)99999-9999"
+						value="#{cadastroAlunoBean.aluno.contato}" />
+				</p:panelGrid>
+				<p:panelGrid columns="2" layout="grid"
+					columnClasses="ui-grid-col-1, ui-grid-col-5"
+					styleClass="panelgrid-noborder">
+					<p:outputLabel value="E-mail" />
+					<p:inputText value="#{cadastroAlunoBean.aluno.email}" />
+					<p:outputLabel value="" />
+					<p:selectBooleanCheckbox
+						itemLabel="O aluno é o próprio responsável"
+						value="#{cadastroAlunoBean.aluno.alunoEResponsavel}">
+						<p:ajax process="@this" update="@form"
+							listener="#{cadastroAlunoBean.carregarDadosResponsavel()}" />
+					</p:selectBooleanCheckbox>
+				</p:panelGrid>
+			</div>
+		</h:form>
+	</ui:define>
+
+</ui:composition>

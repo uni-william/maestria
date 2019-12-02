@@ -1,0 +1,200 @@
+<ui:composition template="/WEB-INF/templates/Layout.xhtml"
+	ounfxmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+	xmlns:f="http://xmlns.jcp.org/jsf/core"
+	xmlns:h="http://xmlns.jcp.org/jsf/html"
+	xmlns:p="http://primefaces.org/ui">
+	<head>
+<meta charset="UTF-8" />
+	</head>
+	<ui:define name="titulo">Mensalidades</ui:define>
+	<ui:define name="content">
+		<f:metadata>
+			<f:viewAction action="#{pesquisaMensalidadeBean.inicializar}" />
+		</f:metadata>
+		<h1 class="aw-page-title">Mensalidades</h1>
+		<h:form id="frm">
+			<p:messages id="msg" />
+			<div class="ui-fluid">
+				<p:toolbar>
+					<p:toolbarGroup align="right">
+						<p:commandButton value="Pesquisar"
+							action="#{pesquisaMensalidadeBean.pesquisar()}" update="@form" />
+					</p:toolbarGroup>
+				</p:toolbar>
+				<p:panelGrid columns="2" layout="grid"
+					columnClasses="ui-grid-col-1, ui-grid-col-2"
+					styleClass="panelgrid-withmargin">
+					<p:outputLabel value="CPF" />
+					<p:inputMask mask="999.999.999-99"
+						value="#{pesquisaMensalidadeBean.mensalidadeFilter.cpf}" />
+				</p:panelGrid>
+				<p:panelGrid columns="2" layout="grid"
+					columnClasses="ui-grid-col-1, ui-grid-col-8"
+					styleClass="panelgrid-noborder">
+					<p:outputLabel value="Responsável" />
+					<p:inputText
+						value="#{pesquisaMensalidadeBean.mensalidadeFilter.nomeResponsavel}" />
+					<p:outputLabel value="Aluno" />
+					<p:inputText
+						value="#{pesquisaMensalidadeBean.mensalidadeFilter.nomeAluno}" />
+				</p:panelGrid>
+				<p:panelGrid columns="2" layout="grid"
+					columnClasses="ui-grid-col-1, ui-grid-col-2"
+					styleClass="panelgrid-noborder">
+					<p:outputLabel value="Status" />
+					<p:selectOneMenu
+						value="#{pesquisaMensalidadeBean.mensalidadeFilter.statusMatricula}">
+						<f:selectItem itemLabel="Todos" />
+						<f:selectItems value="#{pesquisaMensalidadeBean.statusMatriculas}"
+							var="status" itemLabel="#{status.descricao}"
+							itemValue="#{status}" />
+					</p:selectOneMenu>
+				</p:panelGrid>
+				<p:panelGrid columns="4" layout="grid"
+					columnClasses="ui-grid-col-1, ui-grid-col-2, ui-grid-col-1, ui-grid-col-2"
+					styleClass="panelgrid-noborder">
+					<p:outputLabel value="De" />
+					<p:calendar
+						value="#{pesquisaMensalidadeBean.mensalidadeFilter.dataVenctoIni}"
+						pattern="dd/MM/yyyy" mask="true" />
+					<p:outputLabel value="Até" />
+					<p:calendar
+						value="#{pesquisaMensalidadeBean.mensalidadeFilter.dataVenctoFim}"
+						pattern="dd/MM/yyyy" mask="true" />
+
+				</p:panelGrid>
+				<p:dataTable value="#{pesquisaMensalidadeBean.mensalidades}"
+					var="mensalidade" style="margin-top: 20px" reflow="true"
+					emptyMessage="Nenhuma mensalidade cadastrado" id="table"
+					paginator="true" rows="10" rowsPerPageTemplate="10,20,30"
+					paginatorAlwaysVisible="false" paginatorPosition="bottom"
+					paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}">
+					<p:column headerText="Contr." width="5%">
+						<h:outputText value="#{mensalidade.contrato.id}" />
+					</p:column>
+					<p:column headerText="Parc." width="8%">
+						<h:outputText
+							value="#{mensalidade.numParcela == 0 ? 'Matrícula' : mensalidade.numParcela}" />
+					</p:column>
+
+					<p:column headerText="Vencto" width="8%">
+						<h:outputText value="#{mensalidade.vencimento}">
+							<f:convertDateTime pattern="dd/MM/yyyy" />
+						</h:outputText>
+					</p:column>
+
+					<p:column headerText="Valor" width="8%">
+						<h:outputText value="#{mensalidade.valorParcela}">
+							<f:convertNumber type="currency" />
+						</h:outputText>
+					</p:column>
+					<p:column headerText="Pagto" width="8%">
+						<h:outputText value="#{mensalidade.pagamento}">
+							<f:convertDateTime pattern="dd/MM/yyyy" />
+						</h:outputText>
+					</p:column>
+
+					<p:column headerText="Pago" width="8%">
+						<h:outputText value="#{mensalidade.valorPago}">
+							<f:convertNumber type="currency" />
+						</h:outputText>
+					</p:column>
+					<p:column headerText="Responsável">
+						<h:outputText
+							value="#{mensalidade.contrato.aluno.responsavel.nome}" />
+					</p:column>
+					<p:column headerText="Aluno">
+						<h:outputText value="#{mensalidade.contrato.aluno.nome}" />
+					</p:column>
+					<p:column headerText="Status" width="10%">
+						<h:outputText value="#{mensalidade.contrato.status.descricao}" />
+					</p:column>
+					<p:column width="12%" exportable="false">
+						<p:commandButton icon="ui-icon-pencil" style="width: 30px"
+							disabled="#{mensalidade.pagamento != null or !pesquisaMensalidadeBean.permissaoEditar}"
+							oncomplete="PF('dlg').show(); return false;" process="@this"
+							update=":frm:dlg">
+							<f:setPropertyActionListener value="#{mensalidade}"
+								target="#{pesquisaMensalidadeBean.mensalidade}" />
+						</p:commandButton>
+
+						<p:commandButton icon="ui-icon-cancel" title="Limpar Pagamento"
+							oncomplete="PF('limpar').show(); return false;" process="@this"
+							update=":frm:limpar" style="width: 30px"
+							disabled="#{!mensalidade.podeLimpar or !pesquisaMensalidadeBean.permissaoLimparPagamento}">
+							<f:setPropertyActionListener value="#{mensalidade}"
+								target="#{pesquisaMensalidadeBean.mensalidade}" />
+						</p:commandButton>
+
+						<p:commandButton icon="ui-icon-trash" title="Excluir"
+							oncomplete="PF('confirmacao').show(); return false;"
+							process="@this" update=":frm:conf" style="width: 30px"
+							disabled="#{mensalidade.pagamento != null or !pesquisaMensalidadeBean.permissaoExcluir}">
+							<f:setPropertyActionListener value="#{mensalidade}"
+								target="#{pesquisaMensalidadeBean.mensalidade}" />
+						</p:commandButton>
+					</p:column>
+
+				</p:dataTable>
+
+			</div>
+			<p:confirmDialog header="Excluão de Registro"
+				message="Tem certeza que deseja excluir a mensalidade #{pesquisaMensalidadeBean.mensalidade.numParcela} do contrato #{pesquisaMensalidadeBean.mensalidade.contrato.id} do aluno #{pesquisaMensalidadeBean.mensalidade.contrato.aluno.nome}?"
+				widgetVar="confirmacao" id="conf">
+				<p:button value="Não"
+					onclick="PF('confirmacao').hide(); return false;" />
+				<p:commandButton value="Sim" update="@form"
+					oncomplete="PF('confirmacao').hide()" process="@this"
+					action="#{pesquisaMensalidadeBean.excluir}" />
+			</p:confirmDialog>
+
+			<p:confirmDialog header="Limpar Pagamento"
+				message="Tem certeza que deseja limpar o pagamento da mensalidade #{pesquisaMensalidadeBean.mensalidade.numParcela} do contrato #{pesquisaMensalidadeBean.mensalidade.contrato.id} do aluno #{pesquisaMensalidadeBean.mensalidade.contrato.aluno.nome}?"
+				widgetVar="limpar" id="limpar">
+				<p:button value="Não" onclick="PF('limpar').hide(); return false;" />
+				<p:commandButton value="Sim" update="@form"
+					oncomplete="PF('limpar').hide()" process="@this"
+					action="#{pesquisaMensalidadeBean.limparPagamento}" />
+			</p:confirmDialog>
+
+			<p:dialog header="Mensalidade" widgetVar="dlg" id="dlg" modal="true"
+				height="180" width="340" responsive="true">
+				<div class="ui-fluid">
+					<p:panelGrid columns="2" layout="grid"
+						columnClasses="ui-grid-col-4, ui-grid-col-6"
+						styleClass="panelgrid-noborder">
+
+						<p:outputLabel value="Aluno" />
+						<p:outputLabel
+							value="#{pesquisaMensalidadeBean.mensalidade.contrato.aluno.nome}" />
+
+						<p:outputLabel value="Parcela" />
+						<p:outputLabel
+							value="#{pesquisaMensalidadeBean.mensalidade.numParcela}" />
+						<p:outputLabel value="Valor" />
+						<p:inputNumber
+							value="#{pesquisaMensalidadeBean.mensalidade.valorParcela}"
+							decimalSeparator="," thousandSeparator="." decimalPlaces="2" />
+						<p:outputLabel value="Vencimento" />
+						<p:calendar
+							value="#{pesquisaMensalidadeBean.mensalidade.vencimento}"
+							pattern="dd/MM/yyyy" mask="true" />
+					</p:panelGrid>
+					<p:panelGrid columns="2" layout="grid"
+						columnClasses="ui-grid-col-6, ui-grid-col-6"
+						styleClass="panelgrid-noborder">
+						<p:commandButton value="Salvar" update="@form"
+							oncomplete="PF('dlg').hide()" process="@this :frm:dlg"
+							action="#{pesquisaMensalidadeBean.salvar}" />
+						<p:button value="Cancelar"
+							onclick="PF('dlg').hide(); return false;" />
+					</p:panelGrid>
+				</div>
+
+			</p:dialog>
+		</h:form>
+
+	</ui:define>
+
+</ui:composition>

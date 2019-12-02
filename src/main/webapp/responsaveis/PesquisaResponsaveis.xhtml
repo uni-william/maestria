@@ -1,0 +1,92 @@
+<ui:composition template="/WEB-INF/templates/Layout.xhtml"
+	ounfxmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+	xmlns:f="http://xmlns.jcp.org/jsf/core"
+	xmlns:h="http://xmlns.jcp.org/jsf/html"
+	xmlns:p="http://primefaces.org/ui">
+	<head>
+<meta charset="UTF-8" />
+	</head>
+	<ui:define name="titulo">Responsáveis</ui:define>
+	<ui:define name="content">
+		<f:metadata>
+			<f:viewAction action="#{pesquisaResponsavelBean.inicializar}" />
+		</f:metadata>
+		<h1 class="aw-page-title">Responsáveis</h1>
+		<h:form id="frm">
+			<p:messages id="msg" />
+			<div class="ui-fluid">
+				<p:toolbar>
+					<p:toolbarGroup>
+						<p:button value="Novo responsável"
+							outcome="/responsaveis/CadastroResponsavel"
+							disabled="#{!pesquisaResponsavelBean.permissaoNovo}" />
+					</p:toolbarGroup>
+					<p:toolbarGroup align="right">
+						<p:commandButton value="Pesquisar"
+							action="#{pesquisaResponsavelBean.pesquisar()}" update="@form" />
+					</p:toolbarGroup>
+				</p:toolbar>
+				<p:panelGrid columns="2" layout="grid"
+					columnClasses="ui-grid-col-1, ui-grid-col-2"
+					styleClass="panelgrid-withmargin">
+					<p:outputLabel value="CPF" />
+					<p:inputMask mask="999.999.999-99"
+						value="#{pesquisaResponsavelBean.filter.cpf}" />
+				</p:panelGrid>
+				<p:panelGrid columns="2" layout="grid"
+					columnClasses="ui-grid-col-1, ui-grid-col-8"
+					styleClass="panelgrid-noborder">
+					<p:outputLabel value="Responsável" />
+					<p:inputText
+						value="#{pesquisaResponsavelBean.filter.nomeResponsavel}" />
+				</p:panelGrid>
+				<p:dataTable value="#{pesquisaResponsavelBean.responsavels}"
+					var="responsavel" style="margin-top: 20px" reflow="true"
+					emptyMessage="Nenhum responsável cadastrado" id="table"
+					paginator="true" rows="10" rowsPerPageTemplate="10,20,30"
+					paginatorAlwaysVisible="false" paginatorPosition="bottom"
+					paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}">
+					<p:column headerText="Nome">
+						<h:outputText value="#{responsavel.nome}" />
+					</p:column>
+					<p:column headerText="CPF" width="12%">
+						<h:outputText value="#{responsavel.cpf}" />
+					</p:column>
+					<p:column headerText="Identidade" width="12%">
+						<h:outputText value="#{responsavel.identidade}" />
+					</p:column>
+					<p:column headerText="celular" width="12%">
+						<h:outputText value="#{responsavel.celular}" />
+					</p:column>
+					<p:column width="8%" exportable="false">
+						<p:button icon="ui-icon-pencil" style="width: 30px"
+							outcome="/responsaveis/CadastroResponsavel"
+							disabled="#{!pesquisaResponsavelBean.permissaoEditar}">
+							<f:param name="responsavel" value="#{responsavel.id}" />
+						</p:button>
+						<p:commandButton icon="ui-icon-trash" title="Excluir"
+							oncomplete="PF('confirmacao').show(); return false;"
+							process="@this" update=":frm:conf" style="width: 30px" disabled="#{!pesquisaResponsavelBean.permissaoExcluir}">
+							<f:setPropertyActionListener value="#{responsavel}"
+								target="#{pesquisaResponsavelBean.responsavel}" />
+						</p:commandButton>
+					</p:column>
+
+				</p:dataTable>
+
+			</div>
+			<p:confirmDialog header="Excluão de Registro"
+				message="Tem certeza que deseja excluir #{pesquisaResponsavelBean.responsavel.nome}?"
+				widgetVar="confirmacao" id="conf">
+				<p:button value="Não"
+					onclick="PF('confirmacao').hide(); return false;" />
+				<p:commandButton value="Sim" update="@form"
+					oncomplete="PF('confirmacao').hide()" process="@this"
+					action="#{pesquisaResponsavelBean.excluir}" />
+			</p:confirmDialog>
+		</h:form>
+
+	</ui:define>
+
+</ui:composition>

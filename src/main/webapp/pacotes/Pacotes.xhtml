@@ -1,0 +1,59 @@
+<ui:composition template="/WEB-INF/templates/Layout.xhtml"
+	ounfxmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+	xmlns:f="http://xmlns.jcp.org/jsf/core"
+	xmlns:h="http://xmlns.jcp.org/jsf/html"
+	xmlns:p="http://primefaces.org/ui">
+	<head>
+<meta charset="UTF-8" />
+	</head>
+	<ui:define name="titulo">Pacote</ui:define>
+	<ui:define name="content">
+		<f:metadata>
+			<f:viewAction action="#{pacotesBean.inicializar}" />
+			<f:viewParam name="aluno" value="#{pacotesBean.aluno}" />
+		</f:metadata>
+		<h1 class="aw-page-title">Pacotes</h1>
+		<h:form id="frm">
+			<p:messages closable="true" id="msg" />
+			<div class="ui-fluid">
+				<p:repeat value="#{pacotesBean.cursos}" var="curso">
+					<p:panel header="#{curso.descricao}">
+						<p:panelGrid columns="4" layout="grid"
+							columnClasses="ui-grid-col-2, ui-grid-col-6, ui-grid-col-3, ui-grid-col-2"
+							styleClass="panelgrid-noborder">
+							<p:outputLabel value="#{curso.metodologia}" />
+							<p:outputLabel value="#{curso.ementa}" />
+							<p:panelGrid columns="1" layout="grid"
+								columnClasses="ui-grid-col-12" styleClass="panelgrid-noborder">
+								<p:outputLabel
+									value="Matrícula:  #{curso.matricula == null ? 'a definir' : curso.matricula}">
+									<f:convertNumber type="currency" />
+								</p:outputLabel>
+
+								<p:outputLabel
+									value="Mensalidade:  #{curso.valor == null ? 'a definir' : curso.valor}">
+									<f:convertNumber type="currency" />
+								</p:outputLabel>
+							</p:panelGrid>
+							<p:panelGrid columns="1" layout="grid"
+								columnClasses="ui-grid-col-12" styleClass="panelgrid-noborder">
+								<br />
+								<p:button value="Escolher Pacote"
+									rendered="#{pacotesBean.botaoEscolha}"
+									outcome="/pacotes/Matricula"
+									disabled="#{!pacotesBean.permissaoMatricular}">
+									<f:param name="aluno" value="#{pacotesBean.aluno.id}" />
+									<f:param name="curso" value="#{curso.id}" />
+								</p:button>
+							</p:panelGrid>
+						</p:panelGrid>
+					</p:panel>
+				</p:repeat>
+			</div>
+
+		</h:form>
+
+	</ui:define>
+
+</ui:composition>

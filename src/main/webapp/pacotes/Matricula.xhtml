@@ -1,0 +1,110 @@
+<ui:composition template="/WEB-INF/templates/Layout.xhtml"
+	ounfxmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+	xmlns:f="http://xmlns.jcp.org/jsf/core"
+	xmlns:h="http://xmlns.jcp.org/jsf/html"
+	xmlns:p="http://primefaces.org/ui">
+	<head>
+<meta charset="UTF-8" />
+	</head>
+	<ui:define name="titulo">Matrícula</ui:define>
+	<ui:define name="content">
+		<f:metadata>
+			<f:viewAction action="#{matriculaBean.inicializar}" />
+			<f:viewParam name="aluno" value="#{matriculaBean.aluno}" />
+			<f:viewParam name="curso" value="#{matriculaBean.curso}" />
+			<f:viewParam name="contrato" value="#{matriculaBean.contrato}" />
+		</f:metadata>
+		<h1 class="aw-page-title">Matrícula</h1>
+		<h:form id="frm">
+			<p:toolbar>
+				<p:toolbarGroup>
+					<p:commandButton
+						value="#{matriculaBean.jaSalvo ? 'Atualizar Contrato' : 'Realizar matrícula'}"
+						update="@form" action="#{matriculaBean.salvar()}" />
+					<p:button value="Gerar Mensalidades"
+						outcome="/mensalidades/GeraMensalidades"
+						disabled="#{!matriculaBean.salvoEMatriculado or !matriculaBean.permissaoGerarMensalidades}">
+						<f:param name="contrato" value="#{matriculaBean.contrato.id}" />
+					</p:button>
+					<p:commandButton ajax="false" value="Imprimir Contrato"
+						action="#{matriculaBean.emitirContrato()}"
+						disabled="#{!matriculaBean.salvoEMatriculado}" update="msg" />
+					<p:commandButton ajax="false" value="Imprimir Carnê"
+						disabled="#{!matriculaBean.salvoEMatriculado}"
+						action="#{matriculaBean.emitirCarne()}" update="msg" />
+				</p:toolbarGroup>
+				<p:toolbarGroup align="right">
+					<p:button value="Cancelar" outcome="/pacotes/Pacotes"
+						rendered="#{!matriculaBean.jaSalvo}">
+						<f:param name="aluno" value="#{matriculaBean.aluno.id}" />
+					</p:button>
+					<p:button value="Pesquisa" outcome="/pacotes/PesquisaContratos"
+						rendered="#{matriculaBean.jaSalvo}">
+					</p:button>
+				</p:toolbarGroup>
+			</p:toolbar>
+
+			<p:messages closable="true" id="msg" />
+			<div class="ui-fluid">
+				<p:panelGrid columns="2" layout="grid"
+					columnClasses="ui-grid-col-2, ui-grid-col-10"
+					styleClass="panelgrid-noborder" style="margin-top: 10px;">
+					<p:outputLabel value="Aluno" />
+					<p:outputLabel value="#{matriculaBean.contrato.aluno.nome}" />
+					<p:outputLabel value="Curso" />
+					<p:outputLabel value="#{matriculaBean.contrato.curso.descricao}" />
+				</p:panelGrid>
+				<p:separator />
+				<p:panelGrid columns="2" layout="grid"
+					columnClasses="ui-grid-col-2, ui-grid-col-2"
+					styleClass="panelgrid-noborder">
+					<p:outputLabel value="Matrícula" for="matricula" />
+					<p:inputNumber id="matricula"
+						value="#{matriculaBean.contrato.matricula}" thousandSeparator="."
+						decimalSeparator="," decimalPlaces="2" />
+					<p:outputLabel value="Mensalidade" for="mensalidade" />
+					<p:inputNumber id="mensalidade"
+						value="#{matriculaBean.contrato.valor}" thousandSeparator="."
+						decimalSeparator="," decimalPlaces="2" />
+					<p:outputLabel value="Carga horária semanal" for="semanal" />
+					<p:inputNumber id="semanal"
+						value="#{matriculaBean.contrato.cargaHorariaSemanal}"
+						thousandSeparator="." decimalSeparator="," decimalPlaces="2" />
+					<p:outputLabel value="Carga horária total" for="total" />
+					<p:inputNumber id="total"
+						value="#{matriculaBean.contrato.cargaHorariaTotal}"
+						thousandSeparator="." decimalSeparator="," decimalPlaces="2" />
+					<p:outputLabel value="Tipo mensalidade" for="tipoMensalidade" />
+					<p:selectOneMenu id="tipoMensalidade"
+						value="#{matriculaBean.contrato.tipoMensalidade}">
+						<f:selectItems value="#{matriculaBean.tiposMensalidade}"
+							var="tipo" itemValue="#{tipo}" itemLabel="#{tipo.descricao}" />
+					</p:selectOneMenu>
+
+					<p:outputLabel value="Status Contrato" for="status"
+						rendered="#{matriculaBean.jaSalvo}" />
+					<p:selectOneMenu id="status"
+						value="#{matriculaBean.contrato.status}"
+						rendered="#{matriculaBean.jaSalvo}">
+						<f:selectItems value="#{matriculaBean.statusMatricula}"
+							var="status" itemValue="#{status}"
+							itemLabel="#{status.descricao}" />
+					</p:selectOneMenu>
+
+				</p:panelGrid>
+
+				<p:panel header="Dias Semana">
+					<p:selectManyCheckbox id="dias"
+						value="#{matriculaBean.contrato.diasSemana}"
+						converter="#{matriculaBean.diaSemanaConverter}">
+						<f:attribute name="collectionType" value="java.util.ArrayList" />
+						<f:selectItems value="#{matriculaBean.diasSemana}" var="diaSemana"
+							itemLabel="#{diaSemana.descricao}" itemValue="#{diaSemana}" />
+					</p:selectManyCheckbox>
+				</p:panel>
+			</div>
+		</h:form>
+	</ui:define>
+
+</ui:composition>
